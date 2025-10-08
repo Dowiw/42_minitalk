@@ -1,4 +1,16 @@
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   server.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: kmonjard <kmonjard@student.42berlin.d      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/08 20:42:49 by kmonjard          #+#    #+#             */
+/*   Updated: 2025/10/08 20:42:51 by kmonjard         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "libft.h"
 #include <unistd.h>
 #include <signal.h>
 
@@ -21,12 +33,7 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	cmp = info->si_pid;
 	char_received <<= 1;
 	if (signum == SIGUSR1)
-	{
-		write(1, "1", 1);
 		char_received |= 1;
-	}
-	else
-		write(1, "0", 1);
 	bit_count++;
 	if (bit_count == 8)
 	{
@@ -34,7 +41,6 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 			kill(info->si_pid, SIGUSR2);
 		else
 			write(1, &char_received, 1);
-		printf("count %i", bit_count);
 		bit_count = 0;
 		char_received = 0;
 	}
@@ -46,7 +52,7 @@ int main(void)
 	struct sigaction	sa;
 
 	server_pid = getpid();
-	printf("Server PID: %i\n", server_pid);
+	ft_printf("Server PID: %i\n", server_pid);
 	sa.sa_handler = NULL;
 	sa.sa_restorer = NULL;
 	sa.sa_flags = SA_SIGINFO;
