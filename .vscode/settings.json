@@ -29,7 +29,15 @@
 		"signal.h": "c",
 		"stdio.h": "c",
 		"stdlib.h": "c",
-		"types.h": "c"
+		"types.h": "c",
+		"bit": "c",
+		"cmath": "c",
+		"compare": "c",
+		"concepts": "c",
+		"type_traits": "c",
+		"limits": "c",
+		"typeinfo": "c",
+		"utility": "c"
 	},
 	"makefile.configureOnOpen": false
 }

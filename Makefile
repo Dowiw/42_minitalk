@@ -13,7 +13,8 @@
 NAME_CLIENT = client
 NAME_SERVER = server
 
-CC_FLAGS = -Wall -Werror -Wextra
+DEFINES = -D_DEFAULT_SOURCE # for typedefs in signal and unistd
+CC_FLAGS = -Wall -Werror -Wextra $(DEFINES)
 CC = gcc
 
 SRC_DIR = ./src/

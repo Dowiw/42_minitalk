@@ -22,13 +22,9 @@ void	char_to_sig(pid_t *pid, char c)
 	while (i--)
 	{
 		if ((c >> i) & 1)
-		{
 			kill(*pid, SIGUSR1);
-		}
 		else
-		{
 			kill(*pid, SIGUSR2);
-		}
 		usleep(500);
 	}
 }
@@ -40,7 +36,6 @@ void	str_to_sig(pid_t *pid, char *str)
 		char_to_sig(pid, *str);
 		str++;
 	}
-	char_to_sig(pid, '\n');
 	char_to_sig(pid, '\0');
 }
 

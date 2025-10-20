@@ -1,3 +1,6 @@
 # Binaries
 server
 client
+libft.a
+*.o
+.vscode
