@@ -11,8 +11,7 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <signal.h>
-#include <unistd.h>
+#include "minitalk.h"
 
 void	char_to_sig(pid_t *pid, char c)
 {
@@ -25,7 +24,7 @@ void	char_to_sig(pid_t *pid, char c)
 			kill(*pid, SIGUSR1);
 		else
 			kill(*pid, SIGUSR2);
-		usleep(500);
+		usleep(700);
 	}
 }
 
@@ -36,7 +35,17 @@ void	str_to_sig(pid_t *pid, char *str)
 		char_to_sig(pid, *str);
 		str++;
 	}
+	char_to_sig(pid, '\n');
 	char_to_sig(pid, '\0');
+}
+
+void	sig_handler(int signum, siginfo_t *info, void *context)
+{
+	(void)context;
+	if (signum == SIGUSR1)
+		ft_printf("Received SIGUSR1 from server %i.\n", info->si_pid);
+	else
+		ft_printf("Unknown signal received.\n");
 }
 
 /**
@@ -48,13 +57,22 @@ void	str_to_sig(pid_t *pid, char *str)
  */
 int	main(int ac, char **av)
 {
-	char	*msg;
-	pid_t	server_pid;
+	char				*msg;
+	pid_t				server_pid;
+	struct sigaction	sa;
 
 	if (ac != 3)
 		return (write(2, "Usage: ./client <server_pid> <string>\n", 38), 1);
 	server_pid = ft_atoi(av[1]);
 	msg = av[2];
+	sa.sa_handler = NULL;
+	sa.sa_restorer = NULL;
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = sig_handler;
+	if (sigemptyset(&sa.sa_mask) != 0)
+		return (ft_printf("Error (sigemptyset).\n"), 1);
+	if (sigaction(SIGUSR1, &sa, NULL) != 0)
+		return (ft_printf("Signal Error.\n"), 1);
 	str_to_sig(&server_pid, msg);
 	return (0);
 }
