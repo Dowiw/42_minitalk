@@ -11,19 +11,33 @@
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <unistd.h>
-#include <signal.h>
-#include <stdbool.h>
-
-typedef struct s_minitalk_data {
-	char	received;
-	char	*arr_received;
-	size_t	msg_len;
-	int		bit_count;
-	pid_t	prev;
-}			t_minitalk_data;
+#include "minitalk.h"
+#include <stdlib.h>
 
 t_minitalk_data	g_data;
+
+/**
+ * - Append character on the back of a newly allocated string
+ * - Frees previously pointed string s
+ */
+char	*suffix_char_to_str(char *s, char letter)
+{
+	char	*out;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	j = 0;
+	out = malloc(sizeof(char) * (ft_strlen(s) + 2));
+	if (!out)
+		return (NULL);
+	while (s[i])
+		out[j++] = s[i++];
+	out[j++] = letter;
+	out[j] = '\0';
+	free(s);
+	return (out);
+}
 
 /**
  * - Checks if current pid_t is the same across sig_calls
@@ -32,11 +46,12 @@ t_minitalk_data	g_data;
 void	sig_handler(int signum, siginfo_t *info, void *context)
 {
 	(void)context;
-	if (g_data.prev != info->si_pid)
+	if (g_data.prev_pid != info->si_pid)
 	{
 		g_data.bit_count = 0;
 		g_data.received = '\0';
-		g_data.prev = info->si_pid;
+		g_data.prev_pid = info->si_pid;
+		ft_printf("Client [%i]:", info->si_pid);
 	}
 	g_data.received <<= 1;
 	if (signum == SIGUSR1)
@@ -45,9 +60,12 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 	if (g_data.bit_count == 8)
 	{
 		if (g_data.received == '\0')
-			return ;
+		{
+			ft_printf("%s", g_data.str_received);
+			kill(g_data.prev_pid, SIGUSR1);
+		}
 		else
-			write(1, &g_data.received, 1);
+			g_data.str_received = suffix_char_to_str(g_data.str_received, g_data.received);
 		g_data.bit_count = 0;
 		g_data.received = 0;
 	}
@@ -60,13 +78,18 @@ void	sig_handler(int signum, siginfo_t *info, void *context)
 void	init_data(void)
 {
 	g_data.msg_len = 0;
-	g_data.arr_received = NULL;
-	g_data.bit_count = 0;
-	g_data.prev = -1;
 	g_data.received = '\0';
+	g_data.bit_count = 0;
+	g_data.prev_pid = -1;
+	g_data.str_received = ft_strdup("");
+	if (!g_data.str_received)
+	{
+		ft_printf("Error initializing global data. (malloc).\n");
+		exit(EXIT_FAILURE);
+	}
 }
 
-int main(void)
+int	main(void)
 {
 	pid_t				server_pid;
 	struct sigaction	sa;
