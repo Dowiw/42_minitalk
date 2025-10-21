@@ -5,8 +5,29 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: kmonjard <kmonjard@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/19 13:02:24 by kmonjard          #+#    #+#             */
-/*   Updated: 2025/10/20 19:44:55 by kmonjard         ###   ########.fr       */
+/*   Created: 2025/10/21 17:24:04 by kmonjard          #+#    #+#             */
+/*   Updated: 2025/10/21 17:24:06 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef MINITALK_H
+# define MINITALK_H
+
+# include <signal.h>
+
+/**
+ * @param received character received
+ * @param str_received string received by combining characters
+ * @param msg_len length of string
+ * @param bit_count increment number of bits
+ * @param prev_pid pid of the client
+ */
+typedef struct s_minitalk_data {
+	char	received;
+	char	*str_received;
+	size_t	msg_len;
+	int		bit_count;
+	pid_t	prev_pid;
+}			t_minitalk_data;
+
+#endif
