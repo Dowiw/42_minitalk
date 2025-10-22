@@ -6,25 +6,30 @@
 /*   By: kmonjard <kmonjard@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/08 20:42:39 by kmonjard          #+#    #+#             */
-/*   Updated: 2025/10/08 20:42:40 by kmonjard         ###   ########.fr       */
+/*   Updated: 2025/10/22 14:26:20 by kmonjard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "minitalk.h"
 
+/**
+ * - Converts the bits of a character to signals
+ * - SIGUSR1 as TRUE
+ * - SIGUSR2 as FALSE
+ */
 void	char_to_sig(pid_t *pid, char c)
 {
 	int	i;
 
-	i = sizeof(char) * 8;
+	i = 8;
 	while (i--)
 	{
 		if ((c >> i) & 1)
 			kill(*pid, SIGUSR1);
 		else
 			kill(*pid, SIGUSR2);
-		usleep(700);
+		usleep(300);
 	}
 }
 
@@ -72,7 +77,7 @@ int	main(int ac, char **av)
 	if (sigemptyset(&sa.sa_mask) != 0)
 		return (ft_printf("Error (sigemptyset).\n"), 1);
 	if (sigaction(SIGUSR1, &sa, NULL) != 0)
-		return (ft_printf("Signal Error.\n"), 1);
+		return (ft_printf("Error: Initializing signal SIGUSR1.\n"), 1);
 	str_to_sig(&server_pid, msg);
 	return (0);
 }
