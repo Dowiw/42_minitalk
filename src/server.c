@@ -57,7 +57,6 @@ void	free_and_exit(void)
  */
 void	init_data(pid_t pid, bool malloc_message)
 {
-	g_data.msg_len = 0;
 	g_data.received = '\0';
 	g_data.bit_count = 0;
 	g_data.prev_pid = -1;

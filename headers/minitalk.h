@@ -17,15 +17,13 @@
 
 /**
  * @param received character received
- * @param str_received string received by combining characters
- * @param msg_len length of string
+ * @param message string received by combining characters
  * @param bit_count increment number of bits
  * @param prev_pid pid of the client
  */
 typedef struct s_minitalk_data {
 	char	received;
-	char	*str_received;
-	size_t	msg_len;
+	char	*message;
 	int		bit_count;
 	pid_t	prev_pid;
 }			t_minitalk_data;
